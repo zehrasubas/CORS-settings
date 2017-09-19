@@ -1,0 +1,20 @@
+
+NOTE: Before adding all this you should consider security issues.
+
+Add this to your web.config file:
+<httpProtocol>
+  <customHeaders>
+    <add name="Access-Control-Allow-Origin" value="*" />
+    <add name="Access-Control-Allow-Methods" value="GET, PUT, POST, DELETE, HEAD, OPTIONS" />
+    <add name="Access-Control-Allow-Credentials" value="true"/>
+    <add name="Access-Control-Allow-Headers" value="X-Requested-With, origin, content-type, accept" />
+  </customHeaders>
+</httpProtocol>
+If you have Content-type parameter in your ajax call or you are doing PUT request.Those are considered as PreFlight requests.Preflight requests are doing OPTION request before sending main request(PUT,DELETE etc).You can add below method to your global.asax file to pass successfully OPTION process:
+protected void Application_BeginRequest()
+{
+    if (Request.Headers.AllKeys.Contains("Origin") && Request.HttpMethod == "OPTIONS")
+    {
+        Response.Flush();
+    }
+}
